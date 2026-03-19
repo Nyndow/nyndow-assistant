@@ -1,0 +1,13 @@
+langchain
+langchain-ollama
+pydantic 
+chromadb
+pypdf
+markdown 
+tiktoken
+PyQt6
+fastapi
+uvicorn
+python-multipart
+piper-tts
+langchain_community
