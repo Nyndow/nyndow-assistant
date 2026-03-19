@@ -8,16 +8,7 @@ import './App.css'
 
 function App() {
   const fileInputRef = useRef<HTMLInputElement | null>(null)
-  const {
-    messages,
-    input,
-    setInput,
-    busy,
-    sendMessage,
-    clearMessages,
-    useDocs,
-    setUseDocs,
-  } = useChat()
+  const { messages, input, setInput, busy, sendMessage, clearMessages } = useChat()
   const { status, ingest } = usePdfIngest()
 
   const handleSend = async (event?: FormEvent) => {
@@ -54,8 +45,6 @@ function App() {
         onFileChange={handleFileChange}
         onClear={clearMessages}
         fileInputRef={fileInputRef}
-        useDocs={useDocs}
-        onUseDocsChange={setUseDocs}
       />
     </div>
   )

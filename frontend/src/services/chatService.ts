@@ -5,14 +5,9 @@ export type ChatResponse = {
   session_id: string
 }
 
-export const sendChatMessage = (
-  message: string,
-  sessionId: string | null,
-  useDocs: boolean
-) => {
+export const sendChatMessage = (message: string, sessionId: string | null) => {
   return postJson<ChatResponse>('/api/chat', {
     message,
     session_id: sessionId,
-    use_docs: useDocs,
   })
 }
