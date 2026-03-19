@@ -7,6 +7,8 @@ type OptionsPanelProps = {
   onFileChange: (event: ChangeEvent<HTMLInputElement>) => void
   onClear: () => void
   fileInputRef: RefObject<HTMLInputElement>
+  useDocs: boolean
+  onUseDocsChange: (next: boolean) => void
 }
 
 const OptionsPanel = ({
@@ -15,10 +17,20 @@ const OptionsPanel = ({
   onFileChange,
   onClear,
   fileInputRef,
+  useDocs,
+  onUseDocsChange,
 }: OptionsPanelProps) => {
   return (
     <aside className="panel right">
       <div className="panel-header">OPTIONS</div>
+      <label className="option-toggle">
+        <input
+          type="checkbox"
+          checked={useDocs}
+          onChange={(event) => onUseDocsChange(event.target.checked)}
+        />
+        <span>Use docs (RAG)</span>
+      </label>
       <button className="btn option" onClick={onImportClick}>
         Import PDF
       </button>

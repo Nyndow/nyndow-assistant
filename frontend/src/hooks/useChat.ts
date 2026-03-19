@@ -8,6 +8,7 @@ export const useChat = () => {
   const [input, setInput] = useState('')
   const [busy, setBusy] = useState(false)
   const [sessionId, setSessionId] = useState<string | null>(null)
+  const [useDocs, setUseDocs] = useState(true)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   const speakText = useCallback(async (text: string) => {
@@ -43,7 +44,7 @@ export const useChat = () => {
       setMessages((prev) => [...prev, { role: 'user', content: trimmed }])
 
       try {
-        const data = await sendChatMessage(trimmed, sessionId)
+        const data = await sendChatMessage(trimmed, sessionId, useDocs)
         setSessionId(data.session_id)
         setMessages((prev) => [...prev, { role: 'assistant', content: data.reply }])
         void speakText(data.reply)
@@ -57,7 +58,7 @@ export const useChat = () => {
         setBusy(false)
       }
     },
-    [busy, input, sessionId]
+    [busy, input, sessionId, useDocs]
   )
 
   const clearMessages = useCallback(() => {
@@ -72,5 +73,7 @@ export const useChat = () => {
     busy,
     sendMessage,
     clearMessages,
+    useDocs,
+    setUseDocs,
   }
 }
