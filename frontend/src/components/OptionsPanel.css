@@ -16,17 +16,20 @@
   transition: all 0.25s ease;
   position: relative;
   overflow: hidden;
+  user-select: none;
 }
 
-/* Icon */
+/* Icon container */
 .option-icon {
   width: 42px;
   height: 42px;
+  min-width: 42px;
   border-radius: 10px;
-  display: grid;
-  place-items: center;
-  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: rgba(255,255,255,0.05);
+  transition: background 0.25s ease;
 }
 
 /* Text */
@@ -48,7 +51,7 @@
   box-shadow: 0 8px 24px rgba(0,0,0,0.25);
 }
 
-/* Glow sweep effect */
+/* Glow sweep */
 .option-card::after {
   content: "";
   position: absolute;
@@ -69,6 +72,14 @@
 
 .option-card.primary .option-icon {
   background: linear-gradient(135deg, rgba(43,227,227,0.2), rgba(106,92,255,0.2));
+  color: #2be3e3;
+}
+
+/* Loading state */
+.option-card.loading {
+  cursor: not-allowed;
+  opacity: 0.7;
+  pointer-events: none;
 }
 
 /* Danger (Clear) */
@@ -76,13 +87,31 @@
   border-color: rgba(255,80,80,0.25);
 }
 
+.option-card.danger .option-icon {
+  background: rgba(255,80,80,0.15);
+  color: #ff6b6b;
+}
+
 .option-card.danger:hover {
   border-color: rgba(255,80,80,0.5);
   box-shadow: 0 8px 24px rgba(255,80,80,0.2);
 }
 
-.option-card.danger .option-icon {
-  background: rgba(255,80,80,0.15);
+/* Confirm state */
+.option-card.danger.confirming {
+  border-color: rgba(255,160,0,0.5);
+  box-shadow: 0 8px 24px rgba(255,160,0,0.2);
+  animation: pulse-warning 1.2s ease infinite;
+}
+
+.option-card.danger.confirming .option-icon {
+  background: rgba(255,160,0,0.2);
+  color: #ffa000;
+}
+
+@keyframes pulse-warning {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,160,0,0.2); }
+  50%       { box-shadow: 0 0 0 6px rgba(255,160,0,0); }
 }
 
 /* Status text */
@@ -93,23 +122,20 @@
   animation: fade-in 0.3s ease;
 }
 
-/* Optional: success / error coloring (if you pass different text) */
-.option-status.success {
-  color: #2be3a2;
+.option-status.success { color: #2be3a2; }
+.option-status.error   { color: #ff6b6b; }
+
+/* Spin animation */
+.spin {
+  animation: spin 1s linear infinite;
 }
 
-.option-status.error {
-  color: #ff6b6b;
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
 }
 
-/* Animation */
 @keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
 }

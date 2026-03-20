@@ -24,12 +24,13 @@
   color: var(--muted);
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 10px;
   opacity: 0.7;
 }
 
-.empty-state span {
-  font-size: 28px;
+.empty-state svg {
+  color: var(--muted);
 }
 
 /* Message wrapper */
@@ -120,12 +121,13 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: linear-gradient(135deg, #2be3e3, #6a5cff);
   border: none;
   color: white;
-  font-size: 16px;
+  line-height: 1;
   transition: all 0.2s ease;
 }
 
@@ -157,18 +159,12 @@
   }
 }
 
-/* Center the thinking dots and animate */
+/* Spinner animation for busy state */
 .thinking-dots {
   animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
+  0%  { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-}
-
-/* Override the empty state span for the Lucide icon */
-.empty-state svg {
-  color: var(--muted);
-  opacity: 0.7;
 }

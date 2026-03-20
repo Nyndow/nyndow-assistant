@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import type { ChangeEvent, RefObject } from 'react'
+import { FileUp, Trash2, Loader2, AlertTriangle } from 'lucide-react'
 import './Panel.css'
 import './OptionsPanel.css'
 
@@ -19,15 +21,36 @@ const OptionsPanel = ({
   onClear,
   fileInputRef,
 }: OptionsPanelProps) => {
+  const [confirmClear, setConfirmClear] = useState(false)
+
+  const handleClearClick = () => {
+    if (confirmClear) {
+      onClear()
+      setConfirmClear(false)
+    } else {
+      setConfirmClear(true)
+    }
+  }
+
   return (
     <aside className="panel right">
       <div className="panel-header">OPTIONS</div>
 
-      <div className="option-card primary" onClick={onImportClick}>
-        <div className="option-icon">📄</div>
+      <div
+        className={`option-card primary${isLoading ? ' loading' : ''}`}
+        onClick={!isLoading ? onImportClick : undefined}
+        role="button"
+        aria-disabled={isLoading}
+      >
+        <div className="option-icon">
+          {isLoading
+            ? <Loader2 size={20} className="spin" />
+            : <FileUp size={20} />
+          }
+        </div>
         <div>
-          <h3>Import PDF</h3>
-          <p>Upload a document to enhance context</p>
+          <h3>{isLoading ? 'Importing…' : 'Import PDF'}</h3>
+          <p>{isLoading ? 'Processing your document' : 'Upload a document to enhance context'}</p>
         </div>
       </div>
 
@@ -41,11 +64,22 @@ const OptionsPanel = ({
         hidden
       />
 
-      <div className="option-card danger" onClick={onClear}>
-        <div className="option-icon">🗑️</div>
+      <div
+        className={`option-card danger${confirmClear ? ' confirming' : ''}`}
+        onClick={handleClearClick}
+        onBlur={() => setConfirmClear(false)}
+        role="button"
+        tabIndex={0}
+      >
+        <div className="option-icon">
+          {confirmClear
+            ? <AlertTriangle size={20} />
+            : <Trash2 size={20} />
+          }
+        </div>
         <div>
-          <h3>Clear Discussion</h3>
-          <p>Remove all previous messages</p>
+          <h3>{confirmClear ? 'Are you sure?' : 'Clear Discussion'}</h3>
+          <p>{confirmClear ? 'Click again to confirm' : 'Remove all previous messages'}</p>
         </div>
       </div>
     </aside>

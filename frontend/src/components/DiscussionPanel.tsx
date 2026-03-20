@@ -1,5 +1,6 @@
 import type { FormEvent } from 'react'
 import type { ChatMessage } from '../types'
+import { MessageCircle, Send, Loader2 } from 'lucide-react'
 import './Panel.css'
 import './DiscussionPanel.css'
 
@@ -27,7 +28,7 @@ const DiscussionPanel = ({
       <div className="discussion-log">
         {userMessages.length === 0 ? (
           <div className="empty-state">
-            <span>💬</span>
+            <MessageCircle size={28} strokeWidth={1.5} />
             <p>Start a discussion to see your messages here.</p>
           </div>
         ) : (
@@ -53,7 +54,10 @@ const DiscussionPanel = ({
           disabled={busy}
         />
         <button className="btn send" type="submit" disabled={busy}>
-          <span>{busy ? '...' : '➤'}</span>
+          {busy
+            ? <Loader2 size={18} className="thinking-dots" />
+            : <Send size={18} strokeWidth={2} />
+          }
         </button>
       </form>
     </aside>
