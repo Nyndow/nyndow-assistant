@@ -11,3 +11,4 @@ uvicorn
 python-multipart
 piper-tts
 langchain_community
+ollama
