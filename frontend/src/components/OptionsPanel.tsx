@@ -1,4 +1,6 @@
 import type { ChangeEvent, RefObject } from 'react'
+import './Panel.css'
+import './OptionsPanel.css'
 
 
 type OptionsPanelProps = {

@@ -8,7 +8,8 @@ import './App.css'
 
 function App() {
   const fileInputRef = useRef<HTMLInputElement | null>(null)
-  const { messages, input, setInput, busy, currentSpeech, sendMessage, clearMessages } = useChat()
+  const { messages, input, setInput, busy, currentSpeech, isSpeaking, sendMessage, clearMessages } =
+    useChat()
   const { status, ingest } = usePdfIngest()
 
   const handleSend = async (event?: FormEvent) => {
@@ -37,7 +38,7 @@ function App() {
         onSend={handleSend}
       />
 
-      <CenterPanel busy={busy} currentSpeech={currentSpeech} />
+      <CenterPanel busy={busy} currentSpeech={currentSpeech} isSpeaking={isSpeaking} />
 
       <OptionsPanel
         status={status}

@@ -1,0 +1,20 @@
+.right {
+  gap: 18px;
+}
+
+.btn.option {
+  text-align: center;
+  font-weight: 600;
+}
+
+.btn.option.secondary {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--panel-border);
+}
+
+.option-status {
+  color: var(--muted);
+  font-size: 13px;
+  margin: 0;
+}

@@ -1,5 +1,7 @@
 import type { FormEvent } from 'react'
 import type { ChatMessage } from '../types'
+import './Panel.css'
+import './DiscussionPanel.css'
 
 
 type DiscussionPanelProps = {

@@ -8,43 +8,62 @@ export const useChat = () => {
   const [input, setInput] = useState('')
   const [busy, setBusy] = useState(false)
   const [currentSpeech, setCurrentSpeech] = useState('')
+  const [isSpeaking, setIsSpeaking] = useState(false)
   const [sessionId, setSessionId] = useState<string | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
-  const ttsQueueRef = useRef<string[]>([])
+  const ttsQueueRef = useRef<
+    {
+      text: string
+      url?: string
+      prepare?: () => Promise<string | null>
+    }[]
+  >([])
   const speakingRef = useRef(false)
   const spokenCountRef = useRef(0)
 
-  const speakText = useCallback(async (text: string) => {
-    const trimmed = text.trim()
-    if (!trimmed) return
+  const playAudio = useCallback(async (url: string) => {
+    if (audioRef.current) {
+      audioRef.current.pause()
+    }
 
-    try {
-      const blob = await fetchTtsAudio(trimmed)
-      const url = URL.createObjectURL(blob)
+    const audio = new Audio(url)
+    audioRef.current = audio
 
-      if (audioRef.current) {
-        audioRef.current.pause()
+    await new Promise<void>((resolve) => {
+      const cleanup = () => {
+        audio.onended = null
+        audio.onerror = null
+        setIsSpeaking(false)
+        resolve()
       }
 
-      const audio = new Audio(url)
-      audioRef.current = audio
+      setIsSpeaking(true)
+      audio.onended = cleanup
+      audio.onerror = cleanup
 
-      await new Promise<void>((resolve) => {
-        const cleanup = () => {
-          URL.revokeObjectURL(url)
-          audio.onended = null
-          audio.onerror = null
-          resolve()
+      audio.play().catch(cleanup)
+    })
+  }, [])
+
+  const buildTtsItem = useCallback((text: string) => {
+    const trimmed = text.trim()
+    if (!trimmed) return null
+
+    const item = {
+      text: trimmed,
+      prepare: async () => {
+        try {
+          const blob = await fetchTtsAudio(trimmed)
+          const url = URL.createObjectURL(blob)
+          item.url = url
+          return url
+        } catch {
+          return null
         }
-
-        audio.onended = cleanup
-        audio.onerror = cleanup
-
-        audio.play().catch(cleanup)
-      })
-    } catch {
-      // TTS is optional; ignore failures so chat still works.
+      },
     }
+
+    return item
   }, [])
 
   const splitSentences = useCallback((text: string) => {
@@ -62,32 +81,51 @@ export const useChat = () => {
     speakingRef.current = true
 
     while (ttsQueueRef.current.length > 0) {
-      const nextSentence = ttsQueueRef.current.shift()
-      if (nextSentence) {
-        setCurrentSpeech(nextSentence)
-        await speakText(nextSentence)
+      const nextItem = ttsQueueRef.current.shift()
+      if (!nextItem) continue
+
+      setCurrentSpeech(nextItem.text)
+
+      try {
+        const url = nextItem.url ?? (nextItem.prepare ? await nextItem.prepare() : null)
+        if (url) {
+          await playAudio(url)
+          URL.revokeObjectURL(url)
+        }
+      } catch {
+        // TTS is optional; ignore failures so chat still works.
       }
     }
 
     speakingRef.current = false
-  }, [speakText])
+  }, [playAudio])
 
   const enqueueSentences = useCallback(
     (text: string, flushFragment: boolean) => {
       const { sentences, fragment } = splitSentences(text)
       if (sentences.length > spokenCountRef.current) {
         const newSentences = sentences.slice(spokenCountRef.current)
-        ttsQueueRef.current.push(...newSentences)
+        const items = newSentences
+          .map((sentence) => buildTtsItem(sentence))
+          .filter((item): item is NonNullable<typeof item> => item !== null)
+        ttsQueueRef.current.push(...items)
+        items.forEach((item) => {
+          void item.prepare?.()
+        })
         spokenCountRef.current = sentences.length
       }
 
       if (flushFragment && fragment) {
-        ttsQueueRef.current.push(fragment)
+        const item = buildTtsItem(fragment)
+        if (item) {
+          ttsQueueRef.current.push(item)
+          void item.prepare?.()
+        }
       }
 
       void drainTtsQueue()
     },
-    [drainTtsQueue, splitSentences]
+    [buildTtsItem, drainTtsQueue, splitSentences]
   )
 
   const sendMessage = useCallback(
@@ -98,6 +136,7 @@ export const useChat = () => {
       setInput('')
       setBusy(true)
       setCurrentSpeech('')
+      setIsSpeaking(false)
       spokenCountRef.current = 0
       ttsQueueRef.current = []
       setMessages((prev) => [
@@ -165,7 +204,7 @@ export const useChat = () => {
         setBusy(false)
       }
     },
-    [busy, input, sessionId, speakText]
+    [busy, enqueueSentences, input, sessionId]
   )
 
   const clearMessages = useCallback(() => {
@@ -179,6 +218,7 @@ export const useChat = () => {
     setInput,
     busy,
     currentSpeech,
+    isSpeaking,
     sendMessage,
     clearMessages,
   }

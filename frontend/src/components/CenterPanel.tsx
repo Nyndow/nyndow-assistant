@@ -1,15 +1,23 @@
+import './Panel.css'
+import './CenterPanel.css'
+
 type CenterPanelProps = {
   busy: boolean
   currentSpeech: string
+  isSpeaking: boolean
 }
-const CenterPanel = ({ busy, currentSpeech }: CenterPanelProps) => {
+const CenterPanel = ({ busy, currentSpeech, isSpeaking }: CenterPanelProps) => {
   const hasResponse = currentSpeech.trim().length > 0
 
   return (
     <main className="panel center">
-      <div className="status">● SYSTEM: {busy ? 'THINKING' : 'READY'}</div>
-      <div className="mic" aria-hidden="true">
-        🎤
+      <div className={`mic ${isSpeaking ? 'speaking' : ''}`} aria-hidden="true">
+        <div className="mic-core">
+          <div className="mic-icon" />
+        </div>
+
+        <div className="mic-ring" />
+        <div className="mic-ring delay" />
       </div>
       <div className="center-response">
         {hasResponse ? (
