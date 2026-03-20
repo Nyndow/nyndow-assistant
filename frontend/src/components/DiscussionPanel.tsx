@@ -26,16 +26,24 @@ const DiscussionPanel = ({
       <div className="panel-header">DISCUSSION</div>
       <div className="discussion-log">
         {userMessages.length === 0 ? (
-          <div className="empty-state">Start a discussion to see your messages here.</div>
+          <div className="empty-state">
+            <span>💬</span>
+            <p>Start a discussion to see your messages here.</p>
+          </div>
         ) : (
           userMessages.map((message, index) => (
-            <div key={`user-${index}`} className="message user">
-              <span className="message-role">You</span>
-              <p>{message.content}</p>
+            <div key={`user-${index}`} className="message-block">
+              {index === 0 && <hr className="discussion-divider" />}
+              <div className="message user">
+                <div className="bubble">
+                  <p>{message.content}</p>
+                </div>
+              </div>
             </div>
           ))
         )}
       </div>
+
       <form className="discussion-input" onSubmit={onSend}>
         <input
           type="text"
@@ -45,7 +53,7 @@ const DiscussionPanel = ({
           disabled={busy}
         />
         <button className="btn send" type="submit" disabled={busy}>
-          {busy ? 'Thinking...' : 'Send'}
+          <span>{busy ? '...' : '➤'}</span>
         </button>
       </form>
     </aside>

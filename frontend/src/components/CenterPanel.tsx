@@ -1,3 +1,5 @@
+import type { FC } from 'react'
+import { Mic } from 'lucide-react'
 import './Panel.css'
 import './CenterPanel.css'
 
@@ -6,19 +8,20 @@ type CenterPanelProps = {
   currentSpeech: string
   isSpeaking: boolean
 }
-const CenterPanel = ({ busy, currentSpeech, isSpeaking }: CenterPanelProps) => {
+
+const CenterPanel: FC<CenterPanelProps> = ({ busy, currentSpeech, isSpeaking }) => {
   const hasResponse = currentSpeech.trim().length > 0
 
   return (
     <main className="panel center">
       <div className={`mic ${isSpeaking ? 'speaking' : ''}`} aria-hidden="true">
         <div className="mic-core">
-          <div className="mic-icon" />
+          <Mic size={28} strokeWidth={2} />
         </div>
-
         <div className="mic-ring" />
         <div className="mic-ring delay" />
       </div>
+
       <div className="center-response">
         {hasResponse ? (
           <p className="center-sentence">{currentSpeech}</p>

@@ -2,9 +2,9 @@ import type { ChangeEvent, RefObject } from 'react'
 import './Panel.css'
 import './OptionsPanel.css'
 
-
 type OptionsPanelProps = {
-  status: string
+  status?: string
+  isLoading?: boolean
   onImportClick: () => void
   onFileChange: (event: ChangeEvent<HTMLInputElement>) => void
   onClear: () => void
@@ -13,6 +13,7 @@ type OptionsPanelProps = {
 
 const OptionsPanel = ({
   status,
+  isLoading = false,
   onImportClick,
   onFileChange,
   onClear,
@@ -21,10 +22,17 @@ const OptionsPanel = ({
   return (
     <aside className="panel right">
       <div className="panel-header">OPTIONS</div>
-      <button className="btn option" onClick={onImportClick}>
-        Import PDF
-      </button>
-      <p className="option-status">{status}</p>
+
+      <div className="option-card primary" onClick={onImportClick}>
+        <div className="option-icon">📄</div>
+        <div>
+          <h3>Import PDF</h3>
+          <p>Upload a document to enhance context</p>
+        </div>
+      </div>
+
+      {status && <p className="option-status">{status}</p>}
+
       <input
         ref={fileInputRef}
         type="file"
@@ -32,9 +40,14 @@ const OptionsPanel = ({
         onChange={onFileChange}
         hidden
       />
-      <button className="btn option secondary" onClick={onClear}>
-        Clear Discussion
-      </button>
+
+      <div className="option-card danger" onClick={onClear}>
+        <div className="option-icon">🗑️</div>
+        <div>
+          <h3>Clear Discussion</h3>
+          <p>Remove all previous messages</p>
+        </div>
+      </div>
     </aside>
   )
 }
