@@ -128,6 +128,20 @@
   padding: 26px 34px;
 }
 
+.center-response {
+  width: min(640px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.center-sentence {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.6;
+  color: var(--text);
+}
+
 .status {
   color: var(--accent);
   font-family: var(--mono);
@@ -196,6 +210,10 @@
 @media (max-width: 700px) {
   .app {
     padding: 18px;
+  }
+
+  .center-sentence {
+    font-size: 17px;
   }
 
   .mic {

@@ -7,8 +7,12 @@ export const useChat = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [input, setInput] = useState('')
   const [busy, setBusy] = useState(false)
+  const [currentSpeech, setCurrentSpeech] = useState('')
   const [sessionId, setSessionId] = useState<string | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const ttsQueueRef = useRef<string[]>([])
+  const speakingRef = useRef(false)
+  const spokenCountRef = useRef(0)
 
   const speakText = useCallback(async (text: string) => {
     const trimmed = text.trim()
@@ -24,14 +28,67 @@ export const useChat = () => {
 
       const audio = new Audio(url)
       audioRef.current = audio
-      audio.onended = () => {
-        URL.revokeObjectURL(url)
-      }
-      await audio.play()
+
+      await new Promise<void>((resolve) => {
+        const cleanup = () => {
+          URL.revokeObjectURL(url)
+          audio.onended = null
+          audio.onerror = null
+          resolve()
+        }
+
+        audio.onended = cleanup
+        audio.onerror = cleanup
+
+        audio.play().catch(cleanup)
+      })
     } catch {
       // TTS is optional; ignore failures so chat still works.
     }
   }, [])
+
+  const splitSentences = useCallback((text: string) => {
+    const sentenceRegex = /[^.!?]+[.!?]+(?:["')\]]+)?/g
+    const matches = text.match(sentenceRegex) ?? []
+    const consumed = matches.join('')
+    const fragment = text.slice(consumed.length).trim()
+    const sentences = matches.map((sentence) => sentence.trim()).filter(Boolean)
+
+    return { sentences, fragment }
+  }, [])
+
+  const drainTtsQueue = useCallback(async () => {
+    if (speakingRef.current) return
+    speakingRef.current = true
+
+    while (ttsQueueRef.current.length > 0) {
+      const nextSentence = ttsQueueRef.current.shift()
+      if (nextSentence) {
+        setCurrentSpeech(nextSentence)
+        await speakText(nextSentence)
+      }
+    }
+
+    speakingRef.current = false
+  }, [speakText])
+
+  const enqueueSentences = useCallback(
+    (text: string, flushFragment: boolean) => {
+      const { sentences, fragment } = splitSentences(text)
+      if (sentences.length > spokenCountRef.current) {
+        const newSentences = sentences.slice(spokenCountRef.current)
+        ttsQueueRef.current.push(...newSentences)
+        spokenCountRef.current = sentences.length
+      }
+
+      if (flushFragment && fragment) {
+        ttsQueueRef.current.push(fragment)
+      }
+
+      void drainTtsQueue()
+    },
+    [drainTtsQueue, splitSentences]
+  )
 
   const sendMessage = useCallback(
     async (messageText?: string) => {
@@ -40,6 +97,9 @@ export const useChat = () => {
 
       setInput('')
       setBusy(true)
+      setCurrentSpeech('')
+      spokenCountRef.current = 0
+      ttsQueueRef.current = []
       setMessages((prev) => [
         ...prev,
         { role: 'user', content: trimmed },
@@ -71,6 +131,7 @@ export const useChat = () => {
               }
               return next
             })
+            enqueueSentences(accumulated, false)
           }
 
           if (chunk.type === 'done' && chunk.session_id) {
@@ -83,7 +144,7 @@ export const useChat = () => {
         }
 
         if (accumulated.trim()) {
-          void speakText(accumulated)
+          enqueueSentences(accumulated, true)
         }
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Unknown error'
@@ -117,6 +178,7 @@ export const useChat = () => {
     input,
     setInput,
     busy,
+    currentSpeech,
     sendMessage,
     clearMessages,
   }

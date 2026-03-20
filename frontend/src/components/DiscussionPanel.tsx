@@ -17,16 +17,18 @@ const DiscussionPanel = ({
   onInputChange,
   onSend,
 }: DiscussionPanelProps) => {
+  const userMessages = messages.filter((message) => message.role === 'user')
+
   return (
     <aside className="panel left">
       <div className="panel-header">DISCUSSION</div>
       <div className="discussion-log">
-        {messages.length === 0 ? (
-          <div className="empty-state">Start a discussion to see responses here.</div>
+        {userMessages.length === 0 ? (
+          <div className="empty-state">Start a discussion to see your messages here.</div>
         ) : (
-          messages.map((message, index) => (
-            <div key={`${message.role}-${index}`} className={`message ${message.role}`}>
-              <span className="message-role">{message.role === 'user' ? 'You' : 'Assistant'}</span>
+          userMessages.map((message, index) => (
+            <div key={`user-${index}`} className="message user">
+              <span className="message-role">You</span>
               <p>{message.content}</p>
             </div>
           ))
