@@ -1,0 +1,174 @@
+/* Layout */
+.left {
+  gap: 16px;
+  position: relative;
+}
+
+/* Scroll area with fade */
+.discussion-log {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  padding-left: 6px;
+  padding-right: 6px;
+  mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+}
+
+/* Empty state */
+.empty-state {
+  margin: auto;
+  text-align: center;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0.7;
+}
+
+.empty-state span {
+  font-size: 28px;
+}
+
+/* Message wrapper */
+.message-block {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.message {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  animation: message-in 0.3s ease;
+}
+
+/* Bubble */
+.bubble {
+  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  backdrop-filter: blur(6px);
+  transition: all 0.2s ease;
+}
+
+/* User style */
+.message.user {
+  justify-content: center;
+}
+
+.message.user .bubble {
+  background: linear-gradient(135deg, rgba(43,227,227,0.15), rgba(106,92,255,0.15));
+  border: 1px solid rgba(43, 227, 227, 0.25);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* Hover effect */
+.message.user .bubble:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(43,227,227,0.2);
+}
+
+/* Divider above first message */
+.discussion-divider {
+  width: 70%;
+  height: 1px;
+  border: none;
+  margin: 0 auto;
+  background: linear-gradient(
+    90deg,
+    rgba(43,227,227,0),
+    rgba(43,227,227,0.45),
+    rgba(106,92,255,0.45),
+    rgba(106,92,255,0)
+  );
+}
+
+/* Input container */
+.discussion-input {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: auto;
+}
+
+/* Input field (glass style) */
+.discussion-input input {
+  flex: 1;
+  border-radius: 999px;
+  border: 1px solid var(--panel-border);
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(8px);
+  color: var(--text);
+  padding: 12px 16px;
+  outline: none;
+  transition: all 0.25s ease;
+}
+
+.discussion-input input:focus {
+  border-color: rgba(43,227,227,0.6);
+  box-shadow: 0 0 0 3px rgba(43,227,227,0.15);
+}
+
+/* Send button */
+.btn.send {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #2be3e3, #6a5cff);
+  border: none;
+  color: white;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.btn.send:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 20px rgba(43,227,227,0.5);
+}
+
+.btn.send:active {
+  transform: scale(0.95);
+}
+
+/* Disabled state */
+.btn.send:disabled {
+  opacity: 0.6;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Message animation */
+@keyframes message-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Center the thinking dots and animate */
+.thinking-dots {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Override the empty state span for the Lucide icon */
+.empty-state svg {
+  color: var(--muted);
+  opacity: 0.7;
+}

@@ -1,5 +1,7 @@
 import type { FormEvent } from 'react'
 import type { ChatMessage } from '../types'
+import './Panel.css'
+import './DiscussionPanel.css'
 
 
 type DiscussionPanelProps = {
@@ -17,21 +19,31 @@ const DiscussionPanel = ({
   onInputChange,
   onSend,
 }: DiscussionPanelProps) => {
+  const userMessages = messages.filter((message) => message.role === 'user')
+
   return (
     <aside className="panel left">
       <div className="panel-header">DISCUSSION</div>
       <div className="discussion-log">
-        {messages.length === 0 ? (
-          <div className="empty-state">Start a discussion to see responses here.</div>
+        {userMessages.length === 0 ? (
+          <div className="empty-state">
+            <span>💬</span>
+            <p>Start a discussion to see your messages here.</p>
+          </div>
         ) : (
-          messages.map((message, index) => (
-            <div key={`${message.role}-${index}`} className={`message ${message.role}`}>
-              <span className="message-role">{message.role === 'user' ? 'You' : 'Assistant'}</span>
-              <p>{message.content}</p>
+          userMessages.map((message, index) => (
+            <div key={`user-${index}`} className="message-block">
+              {index === 0 && <hr className="discussion-divider" />}
+              <div className="message user">
+                <div className="bubble">
+                  <p>{message.content}</p>
+                </div>
+              </div>
             </div>
           ))
         )}
       </div>
+
       <form className="discussion-input" onSubmit={onSend}>
         <input
           type="text"
@@ -41,7 +53,7 @@ const DiscussionPanel = ({
           disabled={busy}
         />
         <button className="btn send" type="submit" disabled={busy}>
-          {busy ? 'Thinking...' : 'Send'}
+          <span>{busy ? '...' : '➤'}</span>
         </button>
       </form>
     </aside>

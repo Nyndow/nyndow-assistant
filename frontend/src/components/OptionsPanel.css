@@ -1,0 +1,115 @@
+/* Layout */
+.right {
+  gap: 16px;
+}
+
+/* Card style */
+.option-card {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  padding: 14px;
+  border-radius: 14px;
+  background: var(--surface);
+  border: 1px solid var(--panel-border);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Icon */
+.option-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  background: rgba(255,255,255,0.05);
+}
+
+/* Text */
+.option-card h3 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.option-card p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Hover effect */
+.option-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(43,227,227,0.4);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+
+/* Glow sweep effect */
+.option-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.08), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.option-card:hover::after {
+  opacity: 1;
+}
+
+/* Primary (Import) */
+.option-card.primary {
+  border-color: rgba(43,227,227,0.3);
+}
+
+.option-card.primary .option-icon {
+  background: linear-gradient(135deg, rgba(43,227,227,0.2), rgba(106,92,255,0.2));
+}
+
+/* Danger (Clear) */
+.option-card.danger {
+  border-color: rgba(255,80,80,0.25);
+}
+
+.option-card.danger:hover {
+  border-color: rgba(255,80,80,0.5);
+  box-shadow: 0 8px 24px rgba(255,80,80,0.2);
+}
+
+.option-card.danger .option-icon {
+  background: rgba(255,80,80,0.15);
+}
+
+/* Status text */
+.option-status {
+  font-size: 13px;
+  color: var(--muted);
+  padding-left: 4px;
+  animation: fade-in 0.3s ease;
+}
+
+/* Optional: success / error coloring (if you pass different text) */
+.option-status.success {
+  color: #2be3a2;
+}
+
+.option-status.error {
+  color: #ff6b6b;
+}
+
+/* Animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
