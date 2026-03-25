@@ -12,3 +12,5 @@ python-multipart
 piper-tts
 langchain_community
 ollama
+vosk 
+sounddevice
