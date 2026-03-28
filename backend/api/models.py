@@ -18,3 +18,21 @@ class IngestResponse(BaseModel):
 
 class TTSRequest(BaseModel):
     text: str
+
+
+class RoadmapCreateRequest(BaseModel):
+    text: str
+
+
+class RoadmapItem(BaseModel):
+    id: int
+    text: str
+    created_at: str
+
+
+class RoadmapListResponse(BaseModel):
+    items: list[RoadmapItem]
+
+
+class RoadmapDeleteResponse(BaseModel):
+    ok: bool

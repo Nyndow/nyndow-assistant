@@ -24,6 +24,28 @@ export const postJson = async <T>(path: string, payload: unknown): Promise<T> =>
   return response.json() as Promise<T>
 }
 
+export const getJson = async <T>(path: string): Promise<T> => {
+  const response = await fetch(`${API_BASE}${path}`)
+
+  if (!response.ok) {
+    throw buildError(response.status)
+  }
+
+  return response.json() as Promise<T>
+}
+
+export const deleteJson = async <T>(path: string): Promise<T> => {
+  const response = await fetch(`${API_BASE}${path}`, {
+    method: 'DELETE',
+  })
+
+  if (!response.ok) {
+    throw buildError(response.status)
+  }
+
+  return response.json() as Promise<T>
+}
+
 export const postForm = async <T>(path: string, formData: FormData): Promise<T> => {
   const response = await fetch(`${API_BASE}${path}`, {
     method: 'POST',

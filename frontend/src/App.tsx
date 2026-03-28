@@ -7,7 +7,7 @@ import { usePdfIngest } from './hooks/usePdfIngest'
 import './App.css'
 
 function App() {
-  const fileInputRef = useRef<HTMLInputElement | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const { messages, input, setInput, busy, currentSpeech, isSpeaking, sendMessage, clearMessages } =
     useChat()
   const { status, ingest } = usePdfIngest()

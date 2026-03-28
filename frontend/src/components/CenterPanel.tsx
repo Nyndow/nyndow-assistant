@@ -9,7 +9,7 @@ type CenterPanelProps = {
   isSpeaking: boolean
 }
 
-const CenterPanel: FC<CenterPanelProps> = ({ busy, currentSpeech, isSpeaking }) => {
+const CenterPanel: FC<CenterPanelProps> = ({ currentSpeech, isSpeaking }) => {
   const hasResponse = currentSpeech.trim().length > 0
 
   return (
