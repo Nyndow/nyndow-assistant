@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react'
 import type { ChangeEvent, RefObject } from 'react'
 import { FileUp, Trash2, Loader2, AlertTriangle, Plus, X } from 'lucide-react'
-import { addRoadmapItem, deleteRoadmapItem, fetchRoadmap, type RoadmapItem } from '../services/roadmapService'
+import {
+  addRoadmapItem,
+  deleteRoadmapItem,
+  fetchRoadmap,
+  type RoadmapItem
+} from '../services/roadmapService'
 import './Panel.css'
 import './OptionsPanel.css'
 
@@ -31,14 +36,17 @@ const OptionsPanel = ({
 
   useEffect(() => {
     let isActive = true
+
     const load = async () => {
       try {
         const items = await fetchRoadmap()
+
         if (isActive) {
           setRoadmapItems(items)
           setRoadmapError(null)
         }
       } catch (error) {
+        console.error(error)
         if (isActive) {
           setRoadmapError('Failed to load roadmap.')
         }
@@ -50,6 +58,7 @@ const OptionsPanel = ({
     }
 
     load()
+
     return () => {
       isActive = false
     }
@@ -67,13 +76,16 @@ const OptionsPanel = ({
   const handleAddRoadmapItem = async () => {
     const trimmed = roadmapInput.trim()
     if (!trimmed) return
+
     setRoadmapSaving(true)
+
     try {
       const created = await addRoadmapItem(trimmed)
       setRoadmapItems((items) => [created, ...items])
       setRoadmapInput('')
       setRoadmapError(null)
     } catch (error) {
+      console.error(error)
       setRoadmapError('Failed to save item.')
     } finally {
       setRoadmapSaving(false)
@@ -136,6 +148,7 @@ const OptionsPanel = ({
           <h3>Roadmap</h3>
           <p>Features you want later</p>
         </div>
+
         <form
           className="roadmap-form"
           onSubmit={(event) => {
@@ -151,6 +164,7 @@ const OptionsPanel = ({
             aria-label="Add a functionality"
             disabled={roadmapLoading || roadmapSaving}
           />
+
           <button
             type="submit"
             className="roadmap-add"
@@ -161,40 +175,43 @@ const OptionsPanel = ({
             {roadmapSaving ? 'Saving' : 'Add'}
           </button>
         </form>
+
         <ul className="roadmap-list">
-          {roadmapLoading
-            ? (
-              <li className="roadmap-empty">Loading roadmap…</li>
-            )
-            : roadmapItems.length === 0
-            ? (
-              <li className="roadmap-empty">No ideas yet</li>
-            )
-            : (
-              roadmapItems.map((item) => (
-                <li key={item.id} className="roadmap-item">
-                  <span>{item.text}</span>
-                  <button
-                    type="button"
-                    className="roadmap-remove"
-                    onClick={async () => {
-                      try {
-                        const ok = await deleteRoadmapItem(item.id)
-                        if (ok) {
-                          setRoadmapItems((items) => items.filter((entry) => entry.id !== item.id))
-                        }
-                      } catch (error) {
-                        setRoadmapError('Failed to remove item.')
+          {roadmapLoading ? (
+            <li className="roadmap-empty">Loading roadmap…</li>
+          ) : roadmapItems.length === 0 ? (
+            <li className="roadmap-empty">No ideas yet</li>
+          ) : (
+            roadmapItems.map((item) => (
+              <li key={item.id} className="roadmap-item">
+                <span>{item.text}</span>
+
+                <button
+                  type="button"
+                  className="roadmap-remove"
+                  onClick={async () => {
+                    try {
+                      const ok = await deleteRoadmapItem(item.id)
+
+                      if (ok) {
+                        setRoadmapItems((items) =>
+                          items.filter((entry) => entry.id !== item.id)
+                        )
                       }
-                    }}
-                    aria-label={`Remove ${item.text}`}
-                  >
-                    <X size={14} />
-                  </button>
-                </li>
-              ))
-            )}
+                    } catch (error) {
+                      console.error(error)
+                      setRoadmapError('Failed to remove item.')
+                    }
+                  }}
+                  aria-label={`Remove ${item.text}`}
+                >
+                  <X size={14} />
+                </button>
+              </li>
+            ))
+          )}
         </ul>
+
         {roadmapError && <p className="roadmap-error">{roadmapError}</p>}
       </section>
     </aside>
