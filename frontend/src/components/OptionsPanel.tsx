@@ -147,8 +147,7 @@ const OptionsPanel = ({
             }
           </div>
           <div>
-            <h3>{isLoading ? 'Importing…' : 'Import PDF'}</h3>
-            <p>{isLoading ? 'Processing your document' : 'Upload a document to enhance context'}</p>
+            <h3>{isLoading ? 'Importing…' : 'Upload a document to enhance context'}</h3>
           </div>
         </button>
 
@@ -160,7 +159,6 @@ const OptionsPanel = ({
           </div>
           <div>
             <h3>Open Calendar</h3>
-            <p>Pick a date to schedule follow-ups</p>
           </div>
         </button>
 

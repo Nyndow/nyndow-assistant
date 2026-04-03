@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { ingestPdf } from '../services/ingestService'
 
 export const usePdfIngest = () => {
-  const [status, setStatus] = useState('Ready to import a PDF.')
+  const [status, setStatus] = useState('')
 
   const ingest = useCallback(async (file: File) => {
     setStatus(`Uploading ${file.name}...`)
