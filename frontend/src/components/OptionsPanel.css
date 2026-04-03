@@ -75,6 +75,16 @@
   color: #2be3e3;
 }
 
+/* Secondary (Calendar) */
+.option-card.secondary {
+  border-color: rgba(122, 247, 242, 0.28);
+}
+
+.option-card.secondary .option-icon {
+  background: rgba(122, 247, 242, 0.15);
+  color: var(--accent-bright);
+}
+
 /* Loading state */
 .option-card.loading {
   cursor: not-allowed;

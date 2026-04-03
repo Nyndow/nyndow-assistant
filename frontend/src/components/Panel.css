@@ -13,6 +13,56 @@
   letter-spacing: 2px;
   color: var(--muted);
   margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.panel-toggle {
+  border: 1px solid transparent;
+  background: var(--button-bg);
+  color: var(--button-text);
+  border-radius: 999px;
+  height: 28px;
+  width: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.panel-toggle:hover {
+  background: var(--button-hover);
+  border-color: var(--accent-dim);
+}
+
+.panel-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.panel.is-collapsed {
+  padding: 18px 12px;
+}
+
+.panel.is-collapsed .panel-body {
+  display: none;
+}
+
+.panel.is-collapsed .panel-header {
+  margin-bottom: 0;
+  justify-content: center;
+}
+
+.panel.is-collapsed .panel-header span {
+  display: none;
+}
+
+.panel.is-collapsed .panel-toggle {
+  margin: 0 auto;
 }
 
 .btn {

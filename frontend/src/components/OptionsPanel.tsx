@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { ChangeEvent, RefObject } from 'react'
-import { FileUp, Trash2, Loader2, AlertTriangle, Plus, X } from 'lucide-react'
+import { FileUp, Loader2, Plus, X, CalendarDays, Menu } from 'lucide-react'
 import {
   addRoadmapItem,
   deleteRoadmapItem,
@@ -14,20 +14,24 @@ type OptionsPanelProps = {
   status?: string
   isLoading?: boolean
   onImportClick: () => void
+  onOpenCalendar: () => void
   onFileChange: (event: ChangeEvent<HTMLInputElement>) => void
   onClear: () => void
   fileInputRef: RefObject<HTMLInputElement | null>
+  isCollapsed: boolean
+  onToggleCollapse: () => void
 }
 
 const OptionsPanel = ({
   status,
   isLoading = false,
   onImportClick,
+  onOpenCalendar,
   onFileChange,
-  onClear,
   fileInputRef,
+  isCollapsed,
+  onToggleCollapse,
 }: OptionsPanelProps) => {
-  const [confirmClear, setConfirmClear] = useState(false)
   const [roadmapInput, setRoadmapInput] = useState('')
   const [roadmapItems, setRoadmapItems] = useState<RoadmapItem[]>([])
   const [roadmapLoading, setRoadmapLoading] = useState(true)
@@ -64,15 +68,6 @@ const OptionsPanel = ({
     }
   }, [])
 
-  const handleClearClick = () => {
-    if (confirmClear) {
-      onClear()
-      setConfirmClear(false)
-    } else {
-      setConfirmClear(true)
-    }
-  }
-
   const handleAddRoadmapItem = async () => {
     const trimmed = roadmapInput.trim()
     if (!trimmed) return
@@ -93,127 +88,130 @@ const OptionsPanel = ({
   }
 
   return (
-    <aside className="panel right">
-      <div className="panel-header">OPTIONS</div>
-
-      <button
-        className={`option-card primary${isLoading ? ' loading' : ''}`}
-        onClick={!isLoading ? onImportClick : undefined}
-        role="button"
-        aria-disabled={isLoading}
-      >
-        <div className="option-icon">
-          {isLoading
-            ? <Loader2 size={20} className="spin" />
-            : <FileUp size={20} />
-          }
-        </div>
-        <div>
-          <h3>{isLoading ? 'Importing…' : 'Import PDF'}</h3>
-          <p>{isLoading ? 'Processing your document' : 'Upload a document to enhance context'}</p>
-        </div>
-      </button>
-
-      {status && <p className="option-status">{status}</p>}
-
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="application/pdf"
-        onChange={onFileChange}
-        hidden
-      />
-
-      <button
-        className={`option-card danger${confirmClear ? ' confirming' : ''}`}
-        onClick={handleClearClick}
-        onBlur={() => setConfirmClear(false)}
-        role="button"
-        tabIndex={0}
-      >
-        <div className="option-icon">
-          {confirmClear
-            ? <AlertTriangle size={20} />
-            : <Trash2 size={20} />
-          }
-        </div>
-        <div>
-          <h3>{confirmClear ? 'Are you sure?' : 'Clear Discussion'}</h3>
-          <p>{confirmClear ? 'Click again to confirm' : 'Remove all previous messages'}</p>
-        </div>
-      </button>
-
-      <section className="roadmap-card">
-        <div className="roadmap-header">
-          <h3>Roadmap</h3>
-          <p>Features you want later</p>
-        </div>
-
-        <form
-          className="roadmap-form"
-          onSubmit={(event) => {
-            event.preventDefault()
-            handleAddRoadmapItem()
-          }}
+    <aside className={`panel right${isCollapsed ? ' is-collapsed' : ''}`}>
+      <div className="panel-header">
+        <button
+          type="button"
+          className="panel-toggle"
+          onClick={onToggleCollapse}
+          aria-expanded={!isCollapsed}
+          aria-label={isCollapsed ? 'Expand options panel' : 'Collapse options panel'}
         >
-          <input
-            type="text"
-            value={roadmapInput}
-            onChange={(event) => setRoadmapInput(event.target.value)}
-            placeholder="Add a functionality"
-            aria-label="Add a functionality"
-            disabled={roadmapLoading || roadmapSaving}
-          />
+          <Menu size={16} />
+        </button>
+      </div>
 
-          <button
-            type="submit"
-            className="roadmap-add"
-            aria-label="Add functionality"
-            disabled={roadmapLoading || roadmapSaving}
+      <div className="panel-body" aria-hidden={isCollapsed}>
+        <button
+          className={`option-card primary${isLoading ? ' loading' : ''}`}
+          onClick={!isLoading ? onImportClick : undefined}
+          role="button"
+          aria-disabled={isLoading}
+        >
+          <div className="option-icon">
+            {isLoading
+              ? <Loader2 size={20} className="spin" />
+              : <FileUp size={20} />
+            }
+          </div>
+          <div>
+            <h3>{isLoading ? 'Importing…' : 'Import PDF'}</h3>
+            <p>{isLoading ? 'Processing your document' : 'Upload a document to enhance context'}</p>
+          </div>
+        </button>
+
+        {status && <p className="option-status">{status}</p>}
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="application/pdf"
+          onChange={onFileChange}
+          hidden
+        />
+
+        <button className="option-card secondary" onClick={onOpenCalendar} role="button">
+          <div className="option-icon">
+            <CalendarDays size={20} />
+          </div>
+          <div>
+            <h3>Open Calendar</h3>
+            <p>Pick a date to schedule follow-ups</p>
+          </div>
+        </button>
+
+        <section className="roadmap-card">
+          <div className="roadmap-header">
+            <h3>Roadmap</h3>
+            <p>Features you want later</p>
+          </div>
+
+          <form
+            className="roadmap-form"
+            onSubmit={(event) => {
+              event.preventDefault()
+              handleAddRoadmapItem()
+            }}
           >
-            <Plus size={16} />
-            {roadmapSaving ? 'Saving' : 'Add'}
-          </button>
-        </form>
+            <input
+              type="text"
+              value={roadmapInput}
+              onChange={(event) => setRoadmapInput(event.target.value)}
+              placeholder="Add a functionality"
+              aria-label="Add a functionality"
+              disabled={roadmapLoading || roadmapSaving}
+            />
 
-        <ul className="roadmap-list">
-          {roadmapLoading ? (
-            <li className="roadmap-empty">Loading roadmap…</li>
-          ) : roadmapItems.length === 0 ? (
-            <li className="roadmap-empty">No ideas yet</li>
-          ) : (
-            roadmapItems.map((item) => (
-              <li key={item.id} className="roadmap-item">
-                <span>{item.text}</span>
+            <button
+              type="submit"
+              className="roadmap-add"
+              aria-label="Add functionality"
+              disabled={roadmapLoading || roadmapSaving}
+            >
+              <Plus size={16} />
+              {roadmapSaving ? 'Saving' : 'Add'}
+            </button>
+          </form>
 
-                <button
-                  type="button"
-                  className="roadmap-remove"
-                  onClick={async () => {
-                    try {
-                      const ok = await deleteRoadmapItem(item.id)
+          <ul className="roadmap-list">
+            {roadmapLoading ? (
+              <li className="roadmap-empty">Loading roadmap…</li>
+            ) : roadmapItems.length === 0 ? (
+              <li className="roadmap-empty">No ideas yet</li>
+            ) : (
+              roadmapItems.map((item) => (
+                <li key={item.id} className="roadmap-item">
+                  <span>{item.text}</span>
 
-                      if (ok) {
-                        setRoadmapItems((items) =>
-                          items.filter((entry) => entry.id !== item.id)
-                        )
+                  <button
+                    type="button"
+                    className="roadmap-remove"
+                    onClick={async () => {
+                      try {
+                        const ok = await deleteRoadmapItem(item.id)
+
+                        if (ok) {
+                          setRoadmapItems((items) =>
+                            items.filter((entry) => entry.id !== item.id)
+                          )
+                        }
+                      } catch (error) {
+                        console.error(error)
+                        setRoadmapError('Failed to remove item.')
                       }
-                    } catch (error) {
-                      console.error(error)
-                      setRoadmapError('Failed to remove item.')
-                    }
-                  }}
-                  aria-label={`Remove ${item.text}`}
-                >
-                  <X size={14} />
-                </button>
-              </li>
-            ))
-          )}
-        </ul>
+                    }}
+                    aria-label={`Remove ${item.text}`}
+                  >
+                    <X size={14} />
+                  </button>
+                </li>
+              ))
+            )}
+          </ul>
 
-        {roadmapError && <p className="roadmap-error">{roadmapError}</p>}
-      </section>
+          {roadmapError && <p className="roadmap-error">{roadmapError}</p>}
+        </section>
+      </div>
     </aside>
   )
 }
