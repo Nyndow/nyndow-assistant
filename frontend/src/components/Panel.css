@@ -20,9 +20,9 @@
 }
 
 .panel-toggle {
-  border: 1px solid transparent;
-  background: var(--button-bg);
-  color: var(--button-text);
+  border: 1px solid var(--panel-border);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
   border-radius: 999px;
   height: 28px;
   width: 28px;
@@ -34,8 +34,9 @@
 }
 
 .panel-toggle:hover {
-  background: var(--button-hover);
+  background: rgba(43, 227, 227, 0.12);
   border-color: var(--accent-dim);
+  color: var(--accent);
 }
 
 .panel-body {

@@ -92,6 +92,50 @@
   pointer-events: none;
 }
 
+/* Collapsed icon stack */
+.options-collapsed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.options-collapsed-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid var(--panel-border);
+  background: rgba(255, 255, 255, 0.04);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.options-collapsed-icon.primary {
+  border-color: rgba(43, 227, 227, 0.3);
+  background: linear-gradient(135deg, rgba(43, 227, 227, 0.18), rgba(106, 92, 255, 0.18));
+  color: #2be3e3;
+}
+
+.options-collapsed-icon.secondary {
+  border-color: rgba(122, 247, 242, 0.28);
+  background: rgba(122, 247, 242, 0.15);
+  color: var(--accent-bright);
+}
+
+.options-collapsed-icon.loading {
+  cursor: not-allowed;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.options-collapsed-icon:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+}
+
 /* Danger (Clear) */
 .option-card.danger {
   border-color: rgba(255,80,80,0.25);

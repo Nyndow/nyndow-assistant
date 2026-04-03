@@ -1,6 +1,6 @@
 import type { FormEvent } from 'react'
 import type { ChatMessage } from '../types'
-import { MessageCircle, Send, Loader2, Menu } from 'lucide-react'
+import { MessageCircle, Send, Loader2 } from 'lucide-react'
 import './Panel.css'
 import './DiscussionPanel.css'
 
@@ -36,7 +36,7 @@ const DiscussionPanel = ({
           aria-expanded={!isCollapsed}
           aria-label={isCollapsed ? 'Expand discussion panel' : 'Collapse discussion panel'}
         >
-          <Menu size={16} />
+          <MessageCircle size={18} />
         </button>
       </div>
 

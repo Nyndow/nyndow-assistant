@@ -90,6 +90,7 @@ const OptionsPanel = ({
   return (
     <aside className={`panel right${isCollapsed ? ' is-collapsed' : ''}`}>
       <div className="panel-header">
+        <span>OPTIONS</span>
         <button
           type="button"
           className="panel-toggle"
@@ -97,9 +98,40 @@ const OptionsPanel = ({
           aria-expanded={!isCollapsed}
           aria-label={isCollapsed ? 'Expand options panel' : 'Collapse options panel'}
         >
-          <Menu size={16} />
+          <Menu size={18} />
         </button>
       </div>
+
+      {isCollapsed && (
+        <div className="options-collapsed">
+          <button
+            type="button"
+            className={`options-collapsed-icon primary${isLoading ? ' loading' : ''}`}
+            onClick={!isLoading ? onImportClick : undefined}
+            aria-label="Import PDF"
+            aria-disabled={isLoading}
+          >
+            {isLoading ? <Loader2 size={18} className="spin" /> : <FileUp size={18} />}
+          </button>
+
+          <button
+            type="button"
+            className="options-collapsed-icon secondary"
+            onClick={onOpenCalendar}
+            aria-label="Open calendar"
+          >
+            <CalendarDays size={18} />
+          </button>
+        </div>
+      )}
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="application/pdf"
+        onChange={onFileChange}
+        hidden
+      />
 
       <div className="panel-body" aria-hidden={isCollapsed}>
         <button
@@ -121,14 +153,6 @@ const OptionsPanel = ({
         </button>
 
         {status && <p className="option-status">{status}</p>}
-
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="application/pdf"
-          onChange={onFileChange}
-          hidden
-        />
 
         <button className="option-card secondary" onClick={onOpenCalendar} role="button">
           <div className="option-icon">
