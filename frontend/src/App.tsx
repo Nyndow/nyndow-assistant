@@ -11,8 +11,8 @@ function App() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [calendarOpen, setCalendarOpen] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-  const [discussionCollapsed, setDiscussionCollapsed] = useState(true)
-  const [optionsCollapsed, setOptionsCollapsed] = useState(true)
+  const [discussionCollapsed, setDiscussionCollapsed] = useState(false)
+  const [optionsCollapsed, setOptionsCollapsed] = useState(false)
   const { messages, input, setInput, busy, currentSpeech, isSpeaking, sendMessage, clearMessages } =
     useChat()
   const { status, ingest } = usePdfIngest()
@@ -35,22 +35,10 @@ function App() {
 
   return (
     <div
-      className={`app${discussionCollapsed ? ' is-left-collapsed' : ''}${
-        optionsCollapsed ? ' is-right-collapsed' : ''
+      className={`app${optionsCollapsed ? ' is-left-collapsed' : ''}${
+        discussionCollapsed ? ' is-right-collapsed' : ''
       }`}
     >
-      <DiscussionPanel
-        messages={messages}
-        input={input}
-        busy={busy}
-        onInputChange={setInput}
-        onSend={handleSend}
-        isCollapsed={discussionCollapsed}
-        onToggleCollapse={() => setDiscussionCollapsed((prev) => !prev)}
-      />
-
-      <CenterPanel busy={busy} currentSpeech={currentSpeech} isSpeaking={isSpeaking} />
-
       <OptionsPanel
         status={status}
         onImportClick={handleImportClick}
@@ -60,6 +48,18 @@ function App() {
         fileInputRef={fileInputRef}
         isCollapsed={optionsCollapsed}
         onToggleCollapse={() => setOptionsCollapsed((prev) => !prev)}
+      />
+
+      <CenterPanel busy={busy} currentSpeech={currentSpeech} isSpeaking={isSpeaking} />
+
+      <DiscussionPanel
+        messages={messages}
+        input={input}
+        busy={busy}
+        onInputChange={setInput}
+        onSend={handleSend}
+        isCollapsed={discussionCollapsed}
+        onToggleCollapse={() => setDiscussionCollapsed((prev) => !prev)}
       />
 
       <CalendarModal
