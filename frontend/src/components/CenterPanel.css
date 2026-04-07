@@ -13,6 +13,19 @@
   gap: 12px;
 }
 
+.mic-button {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+}
+
+.mic-button:focus-visible {
+  outline: 2px solid rgba(106, 92, 255, 0.7);
+  outline-offset: 6px;
+  border-radius: 999px;
+}
+
 .center-sentence {
   margin: 0;
   font-size: 20px;
@@ -32,6 +45,20 @@
   place-items: center;
   border: 1px solid rgba(43, 227, 227, 0.4);
   box-shadow: 0 0 40px rgba(43, 227, 227, 0.2);
+}
+
+.mic.listening {
+  border-color: rgba(255, 195, 92, 0.55);
+  box-shadow:
+    0 0 30px rgba(255, 195, 92, 0.25),
+    0 0 60px rgba(43, 227, 227, 0.2);
+}
+
+.mic.recording {
+  animation: mic-beat 0.7s ease-in-out infinite;
+  box-shadow:
+    0 0 40px rgba(255, 195, 92, 0.5),
+    0 0 90px rgba(106, 92, 255, 0.35);
 }
 
 .mic.speaking {
@@ -54,6 +81,18 @@
 .subtitle {
   color: var(--muted);
   font-size: 15px;
+}
+
+.center-status {
+  margin: 0;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+.center-status.error {
+  color: #ff7a7a;
 }
 
 .btn.input {

@@ -9,6 +9,7 @@ type DiscussionPanelProps = {
   messages: ChatMessage[]
   input: string
   busy: boolean
+  latestTranscript: string | null
   onInputChange: (value: string) => void
   onSend: (event?: FormEvent) => void
   isCollapsed: boolean
@@ -19,12 +20,14 @@ const DiscussionPanel = ({
   messages,
   input,
   busy,
+  latestTranscript,
   onInputChange,
   onSend,
   isCollapsed,
   onToggleCollapse,
 }: DiscussionPanelProps) => {
   const userMessages = messages.filter((message) => message.role === 'user')
+  const transcriptText = latestTranscript?.trim()
 
   return (
     <aside className={`panel left${isCollapsed ? ' is-collapsed' : ''}`}>
@@ -42,6 +45,17 @@ const DiscussionPanel = ({
 
       <div className="panel-body" aria-hidden={isCollapsed}>
         <div className="discussion-log">
+          {transcriptText ? (
+            <div className="message-block">
+              <div className="message stt">
+                <div className="bubble">
+                  <span className="stt-label">STT</span>
+                  <p>{transcriptText}</p>
+                </div>
+              </div>
+            </div>
+          ) : null}
+
           {userMessages.length === 0 ? (
             <div className="empty-state">
               <MessageCircle size={28} strokeWidth={1.5} />

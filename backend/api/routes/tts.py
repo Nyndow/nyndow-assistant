@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Response
 
 from api.models import TTSRequest
-from core.speech import synthesize_wav_bytes
+from core.tts import synthesize_wav_bytes
 
 router = APIRouter()
 

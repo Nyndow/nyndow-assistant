@@ -20,6 +20,10 @@ class TTSRequest(BaseModel):
     text: str
 
 
+class STTResponse(BaseModel):
+    text: str
+
+
 class RoadmapCreateRequest(BaseModel):
     text: str
 

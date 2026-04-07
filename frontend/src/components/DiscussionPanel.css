@@ -69,6 +69,27 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
 
+.message.stt {
+  justify-content: center;
+}
+
+.message.stt .bubble {
+  background: linear-gradient(135deg, rgba(255, 195, 92, 0.2), rgba(43, 227, 227, 0.1));
+  border: 1px solid rgba(255, 195, 92, 0.45);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.message.stt .bubble p {
+  margin: 6px 0 0;
+}
+
+.stt-label {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+}
+
 /* Hover effect */
 .message.user .bubble:hover {
   transform: translateY(-1px);

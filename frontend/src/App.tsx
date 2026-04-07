@@ -5,6 +5,7 @@ import OptionsPanel from './components/OptionsPanel'
 import CalendarModal from './components/CalendarModal'
 import { useChat } from './hooks/useChat'
 import { usePdfIngest } from './hooks/usePdfIngest'
+import { useVoiceInput } from './hooks/useVoiceInput'
 import './App.css'
 
 function App() {
@@ -13,9 +14,27 @@ function App() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [discussionCollapsed, setDiscussionCollapsed] = useState(false)
   const [optionsCollapsed, setOptionsCollapsed] = useState(false)
+  const [lastTranscript, setLastTranscript] = useState<string | null>(null)
   const { messages, input, setInput, busy, currentSpeech, isSpeaking, sendMessage, clearMessages } =
     useChat()
   const { status, ingest } = usePdfIngest()
+  const {
+    listening,
+    userSpeaking,
+    transcribing,
+    error: sttError,
+    toggleListening,
+  } = useVoiceInput({
+    disabled: busy,
+    onTranscript: async (text) => {
+      setLastTranscript(text)
+      if (busy) {
+        setInput(text)
+        return
+      }
+      await sendMessage(text)
+    },
+  })
 
   const handleSend = async (event?: FormEvent) => {
     event?.preventDefault()
@@ -50,12 +69,21 @@ function App() {
         onToggleCollapse={() => setOptionsCollapsed((prev) => !prev)}
       />
 
-      <CenterPanel busy={busy} currentSpeech={currentSpeech} isSpeaking={isSpeaking} />
+      <CenterPanel
+        currentSpeech={currentSpeech}
+        isSpeaking={isSpeaking}
+        isListening={listening}
+        isRecording={userSpeaking}
+        isTranscribing={transcribing}
+        sttError={sttError}
+        onMicToggle={toggleListening}
+      />
 
       <DiscussionPanel
         messages={messages}
         input={input}
         busy={busy}
+        latestTranscript={lastTranscript}
         onInputChange={setInput}
         onSend={handleSend}
         isCollapsed={discussionCollapsed}
