@@ -3,7 +3,11 @@ from pydantic import BaseModel
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 
+
 class STTSettings(BaseModel):
-    stt_model_path: str = str(BASE_DIR / "data/voice-model/vosk-model-en-us-0.22")
+    stt_model_size: str = "small.en"
+    stt_compute_type: str = "int8"
+    stt_language: str | None = "en"
+    stt_vad_filter: bool = True
 
 stt_settings = STTSettings()

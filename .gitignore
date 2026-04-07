@@ -7,3 +7,4 @@ __pycache__/
 vector_db/
 data/uploads
 backend/data/voice-model/
+backend/dump/

@@ -5,7 +5,6 @@ chromadb
 pypdf
 markdown 
 tiktoken
-PyQt6
 fastapi
 uvicorn
 python-multipart
@@ -14,3 +13,6 @@ langchain_community
 ollama
 vosk 
 sounddevice
+openai-whisper
+scipy
+faster-whisper
