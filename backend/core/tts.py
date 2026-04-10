@@ -17,7 +17,10 @@ def _get_voice() -> PiperVoice:
     if _voice is None:
         if not _MODEL_PATH.exists():
             raise FileNotFoundError(f"TTS model not found at '{_MODEL_PATH}'.")
-        _voice = PiperVoice.load(str(_MODEL_PATH))
+        _voice = PiperVoice.load(
+            str(_MODEL_PATH),
+            use_cuda=tts_settings.tts_use_cuda,
+        )
     return _voice
 
 

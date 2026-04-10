@@ -15,6 +15,7 @@ def _get_model() -> WhisperModel:
     if _model is None:
         _model = WhisperModel(
             stt_settings.stt_model_size,
+            device=stt_settings.stt_device,
             compute_type=stt_settings.stt_compute_type,
         )
     return _model
@@ -30,10 +31,28 @@ def transcribe_wav_path(wav_path: str | Path) -> str:
         raise FileNotFoundError(f"Audio file not found at '{path}'.")
 
     model = _get_model()
-    segments, _ = model.transcribe(
-        str(path),
-        language=stt_settings.stt_language,
-        vad_filter=stt_settings.stt_vad_filter,
-    )
+    try:
+        segments, _ = model.transcribe(
+            str(path),
+            language=stt_settings.stt_language,
+            vad_filter=stt_settings.stt_vad_filter,
+        )
+    except RuntimeError as exc:
+        message = str(exc)
+        if "CUDA failed with error out of memory" not in message:
+            raise
+
+        # Fallback to CPU if the GPU runs out of memory.
+        global _model
+        _model = WhisperModel(
+            stt_settings.stt_model_size,
+            device="cpu",
+            compute_type=stt_settings.stt_compute_type,
+        )
+        segments, _ = _model.transcribe(
+            str(path),
+            language=stt_settings.stt_language,
+            vad_filter=stt_settings.stt_vad_filter,
+        )
     text = " ".join(segment.text for segment in segments).strip()
     return text

@@ -27,7 +27,8 @@ const DiscussionPanel = ({
   onToggleCollapse,
 }: DiscussionPanelProps) => {
   const userMessages = messages.filter((message) => message.role === 'user')
-  const transcriptText = latestTranscript?.trim()
+  const hasTranscript = latestTranscript !== null
+  const transcriptText = latestTranscript?.trim() ?? ''
 
   return (
     <aside className={`panel left${isCollapsed ? ' is-collapsed' : ''}`}>
@@ -45,12 +46,12 @@ const DiscussionPanel = ({
 
       <div className="panel-body" aria-hidden={isCollapsed}>
         <div className="discussion-log">
-          {transcriptText ? (
+          {hasTranscript ? (
             <div className="message-block">
               <div className="message stt">
                 <div className="bubble">
                   <span className="stt-label">STT</span>
-                  <p>{transcriptText}</p>
+                  <p>{transcriptText || 'No speech detected.'}</p>
                 </div>
               </div>
             </div>

@@ -27,5 +27,5 @@ async def stt(audio: UploadFile = File(...)):
             tmp_path.unlink(missing_ok=True)
         except Exception:
             pass
-
+    print(f"Transcribed text: {text}")
     return STTResponse(text=text)

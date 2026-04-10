@@ -98,7 +98,7 @@ export const useVoiceInput = ({ onTranscript, disabled }: VoiceInputOptions = {}
       setTranscribing(true)
       try {
         const text = await transcribeAudio(blob)
-        if (!destroyedRef.current && text && onTranscript) {
+        if (!destroyedRef.current && onTranscript) {
           await onTranscript(text)
         }
       } catch (err) {
