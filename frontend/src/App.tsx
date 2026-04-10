@@ -14,7 +14,6 @@ function App() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [discussionCollapsed, setDiscussionCollapsed] = useState(false)
   const [optionsCollapsed, setOptionsCollapsed] = useState(false)
-  const [lastTranscript, setLastTranscript] = useState<string | null>(null)
   const pendingVoiceRef = useRef<string | null>(null)
   const { messages, input, setInput, busy, currentSpeech, isSpeaking, sendMessage, clearMessages } =
     useChat()
@@ -28,7 +27,6 @@ function App() {
   } = useVoiceInput({
     disabled: busy,
     onTranscript: async (text) => {
-      setLastTranscript(text)
       if (!text.trim()) {
         return
       }
@@ -95,7 +93,6 @@ function App() {
         messages={messages}
         input={input}
         busy={busy}
-        latestTranscript={lastTranscript}
         onInputChange={setInput}
         onSend={handleSend}
         isCollapsed={discussionCollapsed}
