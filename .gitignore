@@ -5,6 +5,6 @@ __pycache__/
 .ruff_cache/
 .cache/
 vector_db/
-data/uploads
+backend/data/uploads/
 backend/data/voice-model/
 backend/dump/
