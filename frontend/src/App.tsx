@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent, type ChangeEvent } from 'react'
+import { useRef, useState, type FormEvent, type ChangeEvent } from 'react'
 import CenterPanel from './components/CenterPanel'
 import DiscussionPanel from './components/DiscussionPanel'
 import OptionsPanel from './components/OptionsPanel'
@@ -14,37 +14,18 @@ function App() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [discussionCollapsed, setDiscussionCollapsed] = useState(false)
   const [optionsCollapsed, setOptionsCollapsed] = useState(false)
-  const pendingVoiceRef = useRef<string | null>(null)
+
   const { messages, input, setInput, busy, currentSpeech, isSpeaking, sendMessage, clearMessages } =
     useChat()
   const { status, ingest } = usePdfIngest()
-  const {
-    listening,
-    userSpeaking,
-    transcribing,
-    error: sttError,
-    toggleListening,
-  } = useVoiceInput({
+
+  const { listening, userSpeaking, transcribing, error: sttError, toggleListening } = useVoiceInput({
     disabled: busy,
-    onTranscript: async (text) => {
-      if (!text.trim()) {
-        return
-      }
-      if (busy) {
-        pendingVoiceRef.current = text
-        return
-      }
-      await sendMessage(text)
+    onTranscript: (text) => {
+      if (!text.trim()) return
+      void sendMessage(text)
     },
   })
-
-  useEffect(() => {
-    if (!busy && pendingVoiceRef.current) {
-      const queued = pendingVoiceRef.current
-      pendingVoiceRef.current = null
-      void sendMessage(queued)
-    }
-  }, [busy, sendMessage])
 
   const handleSend = async (event?: FormEvent) => {
     event?.preventDefault()

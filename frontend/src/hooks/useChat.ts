@@ -49,7 +49,7 @@ export const useChat = () => {
     const trimmed = text.trim()
     if (!trimmed) return null
 
-    const item = {
+    const item: { text: string; url?: string; prepare: () => Promise<string | null> } = {
       text: trimmed,
       prepare: async () => {
         try {

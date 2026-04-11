@@ -2,20 +2,14 @@
 
 Nyndow Assistant is a local-first AI companion with streaming chat, PDF ingestion for retrieval-augmented answers, and built-in text-to-speech playback. The app is split into a FastAPI backend and a React + Vite frontend, with Ollama handling LLM and embeddings locally.
 
+## Demo
+
+[![Watch demo](assets/demo-thumbnail.png)](assets/demo-ai.mp4)
+
 **Features**
 - Streaming chat with session memory.
-- PDF ingestion into a local vector database (Chroma) for document search.
-- Text-to-speech playback via Piper (WAV).
-- Simple roadmap tracker backed by SQLite.
-
-**Tech Stack**
-- Backend: FastAPI, LangChain, Chroma, Ollama, Piper.
-- Frontend: React 19, TypeScript, Vite.
-
-**Project Structure**
-- `backend/` FastAPI server, RAG tools, models, SQLite DB, and vector store.
-- `frontend/` React client with chat, PDF ingest, and roadmap UI.
-- `backend/data/` Uploads, SQLite DB, and voice/STT models.
+- PDF ingestion into a local vector database for document search.
+- Text-to-speech and Speech-to-text
 
 **Prerequisites**
 - Python 3.10+.
@@ -60,16 +54,6 @@ npm run dev
 - LLM + embeddings config: `backend/config/llm_settings.py`.
 - TTS model path: `backend/config/tts_settings.py`.
 - STT model path (optional): `backend/config/stt_settings.py`.
-
-**API Endpoints**
-- `GET /api/health` health check.
-- `POST /api/chat` non-streaming chat response.
-- `POST /api/chat/stream` newline-delimited JSON streaming chat.
-- `POST /api/ingest` PDF upload and vector index.
-- `GET /api/roadmap` list roadmap items.
-- `POST /api/roadmap` create roadmap item.
-- `DELETE /api/roadmap/{id}` remove roadmap item.
-- `POST /api/tts` generate WAV audio for a text prompt.
 
 **Data Locations**
 - Uploaded PDFs: `backend/data/uploads/`.

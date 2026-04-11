@@ -33,6 +33,12 @@ export const useVoiceInput = ({ onTranscript, disabled }: VoiceInputOptions = {}
   const stopResolverRef = useRef<((blob: Blob | null) => void) | null>(null)
   const destroyedRef = useRef(false)
 
+  // Always-current ref so handleTranscript never captures a stale onTranscript
+  const onTranscriptRef = useRef(onTranscript)
+  useEffect(() => {
+    onTranscriptRef.current = onTranscript
+  }, [onTranscript])
+
   const stopMediaTracks = useCallback(() => {
     streamRef.current?.getTracks().forEach((track) => track.stop())
     streamRef.current = null
@@ -93,27 +99,25 @@ export const useVoiceInput = ({ onTranscript, disabled }: VoiceInputOptions = {}
     }
   }, [])
 
-  const handleTranscript = useCallback(
-    async (blob: Blob) => {
-      setTranscribing(true)
-      try {
-        const text = await transcribeAudio(blob)
-        if (!destroyedRef.current && onTranscript) {
-          await onTranscript(text)
-        }
-      } catch (err) {
-        const message = err instanceof Error ? err.message : 'STT failed'
-        if (!destroyedRef.current) {
-          setError(message)
-        }
-      } finally {
-        if (!destroyedRef.current) {
-          setTranscribing(false)
-        }
+  // Uses ref so it's never stale, and has no deps that cause re-creation
+  const handleTranscript = useCallback(async (blob: Blob) => {
+    setTranscribing(true)
+    try {
+      const text = await transcribeAudio(blob)
+      if (!destroyedRef.current && onTranscriptRef.current) {
+        await onTranscriptRef.current(text)
       }
-    },
-    [onTranscript]
-  )
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'STT failed'
+      if (!destroyedRef.current) {
+        setError(message)
+      }
+    } finally {
+      if (!destroyedRef.current) {
+        setTranscribing(false)
+      }
+    }
+  }, []) // no deps needed — onTranscript accessed via ref
 
   const stopListening = useCallback(async () => {
     vadRef.current?.pause()
