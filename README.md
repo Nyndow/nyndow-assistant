@@ -4,7 +4,7 @@ Nyndow Assistant is a local-first AI companion with streaming chat, PDF ingestio
 
 ## Demo
 
-[![Watch demo](assets/demo-thumbnail.png)](assets/demo-ai.mp4)
+https://github.com/user-attachments/assets/80e2933b-ba11-498b-b4a1-37718409d0b5
 
 **Features**
 - Streaming chat with session memory.
