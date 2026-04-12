@@ -94,8 +94,13 @@ const CalendarModal = ({ isOpen, onClose, onSelect, selectedDate = null }: Calen
   }
 
   return (
-    <div className="calendar-overlay" onClick={onClose} role="dialog" aria-modal="true">
-      <div className="calendar-shell" onClick={(event) => event.stopPropagation()}>
+    <button
+      type="button"
+      className="calendar-overlay"
+      onClick={onClose}
+      aria-label="Close calendar"
+    >
+      <div className="calendar-shell" role="dialog" aria-modal="true" onClick={(event) => event.stopPropagation()}>
         <header className="calendar-header">
           <div className="calendar-title">
             <div className="calendar-title-icon">
@@ -213,7 +218,7 @@ const CalendarModal = ({ isOpen, onClose, onSelect, selectedDate = null }: Calen
           </div>
         </div>
       </div>
-    </div>
+    </button>
   )
 }
 
